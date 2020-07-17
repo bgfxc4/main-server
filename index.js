@@ -32,14 +32,14 @@ wss.on('connection', function connection(ws) {
         }  else if(pckgName == "login"){
 
             for(var i = 0; i < users.length; i++){
-                if(pckgCont == await sha512(randBytesSent + users[i] + passwords[i])){
+                if(pckgCont == await SHA512(randBytesSent + users[i] + passwords[i])){
                     console.log("logged in user " + users[i]);
                     sendMessage(ws, "loggedIn: ");
                     return;
                 }
             }
             sendMessage(ws, "loginFailed: ");
-            //console.log("login failed. Hash should be " +  await sha256(randBytesSent + users[0] + passwords[0]) + "  " + randBytesSent + users[0] + passwords[0]);
+            //console.log("login failed. Hash should be " +  await SHA256(randBytesSent + users[0] + passwords[0]) + "  " + randBytesSent + users[0] + passwords[0]);
         }
     }  
 });  
@@ -49,7 +49,7 @@ function sendMessage(connection, msg){
     console.log("sending " + msg);
 }
 
-async function sha512(message) {
+async function SHA512(message) {
     var hash = sha512.create();
     hash.update(message);
     hash.hex();
