@@ -1,11 +1,11 @@
 const WebSocket = require('ws');
 const crypto = require('crypto');
-const { send } = require('process');
+const USERS = require('./users.js'); 
 
 const wss = new WebSocket.Server({ port: 5554 });
 
-const users = ["bgfxc4"];
-const passwords = ["Marc2703"];
+const users = USERS.users;
+const passwords = USERS.passwords;
 
 wss.on('connection', function connection(ws) {
     console.log("Connection open");
