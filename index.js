@@ -33,10 +33,11 @@ wss.on('connection', function connection(ws) {
             for(var i = 0; i < users.length; i++){
                 if(pckgCont == await sha256(randBytesSent + users[i] + passwords[i])){
                     console.log("logged in user " + users[i]);
-                    sendMessage(ws, "logged in");
+                    sendMessage(ws, "loggedIn: ");
                     return;
                 }
             }
+            sendMessage(ws, "loginFailed: ");
             //console.log("login failed. Hash should be " +  await sha256(randBytesSent + users[0] + passwords[0]) + "  " + randBytesSent + users[0] + passwords[0]);
         }
     }  
