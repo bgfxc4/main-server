@@ -2,7 +2,8 @@ const WebSocket = require('ws');
 const crypto = require('crypto');
 const USERS = require('./users.js'); 
 const sha512 = require('./sha512');
-var aesjs = require('aes-js');
+const CryptoJS = require('crypto-js');
+
 
 const wss = new WebSocket.Server({ port: 5554 });
 
@@ -40,7 +41,7 @@ wss.on('connection', function connection(ws) {
                     indexOfUser = i;
                     console.log("logged in user " + users[i]);
                     sessIDs[i] = generateSessionID();
-                    sendMessage(ws, "loggedIn:" + getSessionID(indexOfUser));
+                    sendMessage(ws, "loggedIn:" + encryptAes(passwords[indexOfUser],getSessionID(indexOfUser)));
                     console.log(sessIDs);
                     return;
                 }
@@ -95,15 +96,16 @@ function makeRandStr(length) {
     return result;
  }
 
-  function getSessionID(indexOfUser){
+function getSessionID(indexOfUser){
     return sessIDs[indexOfUser];
-  }
+}
 
-  function encryptAes(){
+function encryptAes(key, text){
+    var encrypted = CryptoJS.AES.encrypt(text, key).toString();
+    return encrypted;
+}
 
-  }
-
-  function decryptAes(){
-
-  }
-
+function decryptAes(key, text){
+    var decrypted = CryptoJS.AES.decrypt(text, key);
+    return decrypted.toString(CryptoJS.enc.Utf8);
+}
