@@ -2,16 +2,20 @@ const WebSocket = require('ws');
 const crypto = require('crypto');
 const USERS = require('./users.js'); 
 const sha512 = require('./sha512');
+var aesjs = require('aes-js');
 
 const wss = new WebSocket.Server({ port: 5554 });
 
 const users = USERS.users;
 const passwords = USERS.passwords;
+var sessIDs = [];
+
+for(var i = 0; i < users.length; i++){sessIDs[i] = ''}
 
 wss.on('connection', function connection(ws) {
     console.log("Connection open");
-
     var randBytesSent;
+    var indexOfUser;
 
   ws.on('message', function incoming(message) {
     console.log('received: %s', message);
@@ -33,8 +37,11 @@ wss.on('connection', function connection(ws) {
 
             for(var i = 0; i < users.length; i++){
                 if(pckgCont == await SHA512(randBytesSent + users[i] + passwords[i])){
+                    indexOfUser = i;
                     console.log("logged in user " + users[i]);
-                    sendMessage(ws, "loggedIn: ");
+                    sessIDs[i] = generateSessionID();
+                    sendMessage(ws, "loggedIn:" + getSessionID(indexOfUser));
+                    console.log(sessIDs);
                     return;
                 }
             }
@@ -42,6 +49,13 @@ wss.on('connection', function connection(ws) {
             //console.log("login failed. Hash should be " +  await SHA256(randBytesSent + users[0] + passwords[0]) + "  " + randBytesSent + users[0] + passwords[0]);
         }
     }  
+
+    ws.on('close', function(){
+        if(indexOfUser != undefined){
+            sessIDs[indexOfUser] = '';
+        }
+        console.log("ws closed!");
+    })
 });  
 
 function sendMessage(connection, msg){
@@ -55,3 +69,41 @@ async function SHA512(message) {
     hash.hex();
     return hash;
   }
+
+function generateSessionID(){
+    var isEqual = false;
+    var ID;
+    do{
+        isEqual = false;
+        ID = makeRandStr(20);
+        for(var i = 0; i < users.length; i++){
+            if(ID == sessIDs[i]){
+                isEqual = true;
+            }
+        }
+    }while(isEqual);
+    return ID;
+}
+
+function makeRandStr(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+       result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+ }
+
+  function getSessionID(indexOfUser){
+    return sessIDs[indexOfUser];
+  }
+
+  function encryptAes(){
+
+  }
+
+  function decryptAes(){
+
+  }
+
