@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const USERS = require('./users.js'); 
 const sha512 = require('./sha512');
 const CryptoJS = require('crypto-js');
+const fs = require('fs');
 
 
 const wss = new WebSocket.Server({ port: 5554 });
@@ -41,7 +42,7 @@ wss.on('connection', function connection(ws) {
                     indexOfUser = i;
                     console.log("logged in user " + users[i]);
                     sessIDs[i] = generateSessionID();
-                    sendMessage(ws, "loggedIn:" + encryptAes(passwords[indexOfUser],getSessionID(indexOfUser)));
+                    sendMessage(ws, "loggedIn:" + encryptAes(passwords[indexOfUser],getSessionID(indexOfUser)) + " " +   fs.readFile('demofile1.html', function(err, data) {return data}));
                     console.log(sessIDs);
                     return;
                 }
