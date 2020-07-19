@@ -69,7 +69,7 @@ wss.on('connection', function connection(ws) {
                         sendMessage(ws, 'validate:ok');
                         return;
                     }
-                    console.log(SHA512(sessIDs[i] + passwords[i]));
+                    console.log(await SHA512(sessIDs[i] + passwords[i]));
                 }
             }
             sendMessage(ws, 'validate:false');
