@@ -63,13 +63,13 @@ wss.on('connection', function connection(ws) {
                         sessIDsTemp[i] = '';
                         return;
                     }
-                    console.log(await SHA512(sessIDs[i] + passwords[i]));
+                    console.log(SHA512(sessIDs[i] + passwords[i]));
                 }else{
                     if(SHA512(sessIDs[i] + passwords[i]) == pckgCont){
                         sendMessage(ws, 'validate:ok');
                         return;
                     }
-                    console.log(await SHA512(sessIDs[i] + passwords[i]));
+                    console.log(SHA512(sessIDs[i] + passwords[i]));
                 }
             }
             sendMessage(ws, 'validate:false');
