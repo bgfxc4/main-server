@@ -30,7 +30,7 @@ wss.on('connection', function connection(ws) {
   async function processMessage(msg){
     var split = msg.split(":", 2);
     var pckgName = split[0];
-    var pckgCont = pckgCont.substring(pckgCont.indexOf(':')+1)
+    var pckgCont = msg.substring(msg.indexOf(':')+1)
 
         if(pckgName == "reqRandBytes"){
             var rand = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 20);
