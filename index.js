@@ -57,19 +57,21 @@ wss.on('connection', function connection(ws) {
         }else if(pckgName == "validate"){
             for(var i = 0; i < users.length; i++){
                 if(sessIDs[i] == ''){
-                    if(await SHA512(sessIDsTemp[i] + passwords[i]) == pckgCont){
+                    var hash = await SHA512(sessIDsTemp[i] + passwords[i]);
+                    if(hash == pckgCont){
                         sendMessage(ws, 'validate:ok');
                         sessIDs[i] = sessIDsTemp[i];
                         sessIDsTemp[i] = '';
                         return;
                     }
-                    console.log(SHA512(sessIDs[i] + passwords[i]));
+                    console.log(hash);
                 }else{
-                    if(await SHA512(sessIDs[i] + passwords[i]) == pckgCont){
+                    var hash = await SHA512(sessIDs[i] + passwords[i]);
+                    if(hash == pckgCont){
                         sendMessage(ws, 'validate:ok');
                         return;
                     }
-                    console.log(await SHA512(sessIDs[i] + passwords[i]));
+                    console.log(hash);
                 }
             }
             sendMessage(ws, 'validate:false');
