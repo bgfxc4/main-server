@@ -4,6 +4,7 @@ const USERS = require('./users.js');
 const sha512 = require('./sha512');
 const CryptoJS = require('crypto-js');
 const fs = require('fs');
+const { send } = require('process');
 
 
 const wss = new WebSocket.Server({ port: 5554 });
@@ -49,6 +50,14 @@ wss.on('connection', function connection(ws) {
             }
             sendMessage(ws, "loginFailed: ");
             //console.log("login failed. Hash should be " +  await SHA256(randBytesSent + users[0] + passwords[0]) + "  " + randBytesSent + users[0] + passwords[0]);
+        }else if(pckgName == "validate"){
+            for(var i = 0; i < users.length; i++){
+                if(decryptAes(passwords[i], sessIDs[i]) == pckgCont){
+                    sendMessage(ws, 'validate:ok');
+                    return;
+                }
+            }
+            sendMessage(ws, 'validate:false');
         }
     }  
 
