@@ -80,6 +80,8 @@ wss.on('connection', function connection(ws) {
                 }
             }
             sendMessage(ws, 'validate:false');
+        }else {
+            console.log("verpiss dich, kek"); 
         }
     }  
 
