@@ -1,10 +1,7 @@
 const WebSocket = require('ws');
-const crypto = require('crypto');
 const USERS = require('./users.js'); 
 const sha512 = require('./sha512');
 const CryptoJS = require('crypto-js');
-const fs = require('fs');
-const { send } = require('process');
 
 
 const wss = new WebSocket.Server({ port: 5554 });
@@ -12,8 +9,10 @@ const wss = new WebSocket.Server({ port: 5554 });
 const users = USERS.users;
 const passwords = USERS.passwords;
 var sessIDs = [];
+var sessIDsTemp = [];
 
 for(var i = 0; i < users.length; i++){sessIDs[i] = ''}
+for(var i = 0; i < users.length; i++){sessIDsTemp[i] = ''}
 
 wss.on('connection', function connection(ws) {
     console.log("Connection open");
@@ -30,7 +29,12 @@ wss.on('connection', function connection(ws) {
   async function processMessage(msg){
     var split = msg.split(":", 2);
     var pckgName = split[0];
-    var pckgCont = msg.substring(msg.indexOf(':')+1)
+    var pckgCont;
+    if(msg.substring(msg.indexOf(':')+1)){
+        pckgCont = msg.substring(msg.indexOf(':')+1);
+    }else{
+        pckgCont = " ";
+    }
 
         if(pckgName == "reqRandBytes"){
             var rand = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 20);
@@ -42,9 +46,9 @@ wss.on('connection', function connection(ws) {
                 if(pckgCont == await SHA512(randBytesSent + users[i] + passwords[i])){
                     indexOfUser = i;
                     console.log("logged in user " + users[i]);
-                    sessIDs[i] = generateSessionID();
+                    sessIDsTemp[i] = generateSessionID();
                     sendMessage(ws, "loggedIn:" + encryptAes(passwords[indexOfUser],getSessionID(indexOfUser)));
-                    console.log(sessIDs);
+                    console.log(sessIDsTemp);
                     return;
                 }
             }
@@ -52,17 +56,30 @@ wss.on('connection', function connection(ws) {
             //console.log("login failed. Hash should be " +  await SHA256(randBytesSent + users[0] + passwords[0]) + "  " + randBytesSent + users[0] + passwords[0]);
         }else if(pckgName == "validate"){
             for(var i = 0; i < users.length; i++){
-                if(SHA512(sessIDs[i] + passwords[i]) == pckgCont){
-                    sendMessage(ws, 'validate:ok');
-                    return;
+                if(sessIDs[i] == ''){
+                    if(SHA512(sessIDsTemp[i] + passwords[i]) == pckgCont){
+                        sendMessage(ws, 'validate:ok');
+                        sessIDs[i] = sessIDsTemp[i];
+                        sessIDsTemp[i] = '';
+                        return;
+                    }
+                    console.log(SHA512(sessIDs[i] + passwords[i]));
+                }else{
+                    if(SHA512(sessIDs[i] + passwords[i]) == pckgCont){
+                        sendMessage(ws, 'validate:ok');
+                        return;
+                    }
+                    console.log(SHA512(sessIDs[i] + passwords[i]));
                 }
-                console.log(SHA512(sessIDs[i] + passwords[i]));
             }
             sendMessage(ws, 'validate:false');
         }
     }  
 
     ws.on('close', function(){
+        if(sessIDs[indexOfUser]){
+            sessIDs[indexOfUser] = "";
+        }
         console.log("ws closed!");
     })
 });  
