@@ -52,11 +52,11 @@ wss.on('connection', function connection(ws) {
             //console.log("login failed. Hash should be " +  await SHA256(randBytesSent + users[0] + passwords[0]) + "  " + randBytesSent + users[0] + passwords[0]);
         }else if(pckgName == "validate"){
             for(var i = 0; i < users.length; i++){
-                if(encryptAes(passwords[i], sessIDs[i]) == pckgCont){
+                if(SHA512(sessIDs[i] + passwords[i]) == pckgCont){
                     sendMessage(ws, 'validate:ok');
                     return;
                 }
-                console.log(encryptAes(passwords[i], sessIDs[i]));
+                console.log(SHA512(sessIDs[i] + passwords[i]));
             }
             sendMessage(ws, 'validate:false');
         }
