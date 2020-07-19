@@ -42,9 +42,7 @@ wss.on('connection', function connection(ws) {
                     indexOfUser = i;
                     console.log("logged in user " + users[i]);
                     sessIDs[i] = generateSessionID();
-                    fs.readFile('./htmls/adminArea.html', function(err, data) {
-                        sendMessage(ws, "loggedIn:" + encryptAes(passwords[indexOfUser],getSessionID(indexOfUser)) + " " + data.toString());
-                    });
+                    sendMessage(ws, "loggedIn:" + encryptAes(passwords[indexOfUser],getSessionID(indexOfUser)));
                     console.log(sessIDs);
                     return;
                 }
