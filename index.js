@@ -48,7 +48,7 @@ wss.on('connection', function connection(ws) {
                     console.log("logged in user " + users[i]);
                     sessIDsTemp[i] = generateSessionID();
                     sendMessage(ws, "loggedIn:" + encryptAes(passwords[indexOfUser],getSessionID(indexOfUser)));
-                    console.log(sessIDsTemp);
+                    //console.log(sessIDsTemp);
                     return;
                 }
             }
