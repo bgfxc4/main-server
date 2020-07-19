@@ -65,11 +65,11 @@ wss.on('connection', function connection(ws) {
                     }
                     console.log(SHA512(sessIDs[i] + passwords[i]));
                 }else{
-                    if(SHA512(sessIDs[i] + passwords[i]) == pckgCont){
+                    if(await SHA512(sessIDs[i] + passwords[i]) == pckgCont){
                         sendMessage(ws, 'validate:ok');
                         return;
                     }
-                    console.log(SHA512(sessIDs[i] + passwords[i]));
+                    console.log(await SHA512(sessIDs[i] + passwords[i]));
                 }
             }
             sendMessage(ws, 'validate:false');
