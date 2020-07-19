@@ -64,14 +64,14 @@ wss.on('connection', function connection(ws) {
                         sessIDsTemp[i] = '';
                         return;
                     }
-                    console.log(hash);
+                    //console.log(hash);
                 }else{
                     var hash = await SHA512(sessIDs[i] + passwords[i]);
                     if(hash == pckgCont){
                         sendMessage(ws, 'validate:ok');
                         return;
                     }
-                    console.log(hash);
+                    //console.log(hash);
                 }
             }
             sendMessage(ws, 'validate:false');
