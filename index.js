@@ -57,13 +57,13 @@ wss.on('connection', function connection(ws) {
         }else if(pckgName == "validate"){
             for(var i = 0; i < users.length; i++){
                 if(sessIDs[i] == ''){
-                    if(SHA512(sessIDsTemp[i] + passwords[i]) == pckgCont){
+                    if(await SHA512(sessIDsTemp[i] + passwords[i]) == pckgCont){
                         sendMessage(ws, 'validate:ok');
                         sessIDs[i] = sessIDsTemp[i];
                         sessIDsTemp[i] = '';
                         return;
                     }
-                    console.log(SHA512(sessIDs[i] + passwords[i]));
+                    console.log(await SHA512(sessIDs[i] + passwords[i]));
                 }else{
                     if(SHA512(sessIDs[i] + passwords[i]) == pckgCont){
                         sendMessage(ws, 'validate:ok');
