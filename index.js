@@ -42,9 +42,9 @@ wss.on('connection', function connection(ws) {
                     indexOfUser = i;
                     console.log("logged in user " + users[i]);
                     sessIDs[i] = generateSessionID();
-                    var html;
-                    fs.readFile('./htmls/adminArea.html', function(err, data) {html = data.toString()});
-                    sendMessage(ws, "loggedIn:" + encryptAes(passwords[indexOfUser],getSessionID(indexOfUser)) + " " + html);
+                    fs.readFile('./htmls/adminArea.html', function(err, data) {
+                        sendMessage(ws, "loggedIn:" + encryptAes(passwords[indexOfUser],getSessionID(indexOfUser)) + " " + data.toString());
+                    });
                     console.log(sessIDs);
                     return;
                 }
