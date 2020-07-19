@@ -43,7 +43,7 @@ wss.on('connection', function connection(ws) {
                     indexOfUser = i;
                     console.log("logged in user " + users[i]);
                     sessIDs[i] = generateSessionID();
-                    sendMessage(ws, "loggedIn:" + encryptAes(passwords[indexOfUser],getSessionID(indexOfUser)));
+                    sendMessage(ws, "loggedIn:" + decryptAes(passwords[indexOfUser],getSessionID(indexOfUser)));
                     console.log(sessIDs);
                     return;
                 }
@@ -62,9 +62,6 @@ wss.on('connection', function connection(ws) {
     }  
 
     ws.on('close', function(){
-        if(indexOfUser != undefined){
-            sessIDs[indexOfUser] = '';
-        }
         console.log("ws closed!");
     })
 });  
