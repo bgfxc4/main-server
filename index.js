@@ -27,8 +27,12 @@ wss.on('connection', function connection(ws) {
   ws.send('Connected!');
 
   async function processMessage(msg){
-    if(!msg.split(":", 2)) {console.log("verpiss dich, kek"); return;}
-    var split = msg.split(":", 2);
+    try{
+        var split = msg.split(":", 2);
+    }catch{
+        console.log("verpiss dich, kek"); 
+        return;
+    }
     var pckgName = split[0];
     var pckgCont;
     if(msg.substring(msg.indexOf(':')+1)){
