@@ -30,7 +30,7 @@ wss.on('connection', function connection(ws) {
   async function processMessage(msg){
     var split = msg.split(":", 2);
     var pckgName = split[0];
-    var pckgCont = split[1];
+    var pckgCont = pckgCont.substring(pckgCont.indexOf(':')+1)
 
         if(pckgName == "reqRandBytes"){
             var rand = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 20);
@@ -43,7 +43,7 @@ wss.on('connection', function connection(ws) {
                     indexOfUser = i;
                     console.log("logged in user " + users[i]);
                     sessIDs[i] = generateSessionID();
-                    sendMessage(ws, "loggedIn:" + decryptAes(passwords[indexOfUser],getSessionID(indexOfUser)));
+                    sendMessage(ws, "loggedIn:" + encryptAes(passwords[indexOfUser],getSessionID(indexOfUser)));
                     console.log(sessIDs);
                     return;
                 }
@@ -52,10 +52,11 @@ wss.on('connection', function connection(ws) {
             //console.log("login failed. Hash should be " +  await SHA256(randBytesSent + users[0] + passwords[0]) + "  " + randBytesSent + users[0] + passwords[0]);
         }else if(pckgName == "validate"){
             for(var i = 0; i < users.length; i++){
-                if(decryptAes(passwords[i], sessIDs[i]) == pckgCont){
+                if(encryptAes(passwords[i], sessIDs[i]) == pckgCont){
                     sendMessage(ws, 'validate:ok');
                     return;
                 }
+                console.log(encryptAes(passwords[i], sessIDs[i]));
             }
             sendMessage(ws, 'validate:false');
         }
