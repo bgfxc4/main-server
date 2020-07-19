@@ -124,6 +124,9 @@ function makeRandStr(length) {
  }
 
 function getSessionID(indexOfUser){
+    if(sessIDs[indexOfUser] == ''){
+        return sessIDsTemp[indexOfUser];
+    }
     return sessIDs[indexOfUser];
 }
 
