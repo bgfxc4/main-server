@@ -64,12 +64,11 @@ wss.on('connection', function connection(ws) {
                 if(sessIDs[i] == ''){
                     var hash = await SHA512(sessIDsTemp[i] + passwords[i]);
                     if(hash == pckgCont){
-                        checkForWebSocketServer("ws://jsdhbfuszhbf.de:55").then((a) =>{
-                            sendMessage(ws, 'validate:ok ' + a);
-                            sessIDs[i] = sessIDsTemp[i];
-                            sessIDsTemp[i] = '';
-                            return;
-                        });
+                        sendMessage(ws, 'validate:ok ' + a);
+                        sessIDs[i] = sessIDsTemp[i];
+                        sessIDsTemp[i] = '';
+                        checkForWebSocketServers(ws);
+                        return;
                     }
                     //console.log(hash);
                 }else{
@@ -149,15 +148,8 @@ function decryptAes(key, text){
     return decrypted.toString(CryptoJS.enc.Utf8);
 }
 
-async function checkForWebSocketServer(url){
-        testWs = new WebSocket(url);
-        testWs.onopen = function(e) {
-            return "true";
-            };
-
-        testWs.onerror = function(event) {
-            return "false";
-        };
-            
-
+function checkForWebSocketServers(ws){
+    testWsMarchat = new WebSocket("ws://marchat.zapto.org:5555");
+    testWsMarchat.onopen = function(event) {ws.send("wsStatus:marchat true")};
+    testWsMarchat.onerror = function(event) {ws.send("wsStatus:marchat false")};
 }
