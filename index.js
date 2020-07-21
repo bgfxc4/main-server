@@ -148,11 +148,15 @@ function decryptAes(key, text){
     return decrypted.toString(CryptoJS.enc.Utf8);
 }
 
-function checkForWebSocketServer(url){
-    try{
+async function checkForWebSocketServer(url){
         testWs = new WebSocket(url);
-        return "true";
-    }catch{
-        return "false";
-    }
+        testWs.onopen = function(e) {
+            return "true";
+            };
+
+        testWs.onerror = function(event) {
+            return "false";
+        };
+            
+
 }
