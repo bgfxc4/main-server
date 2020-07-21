@@ -64,11 +64,12 @@ wss.on('connection', function connection(ws) {
                 if(sessIDs[i] == ''){
                     var hash = await SHA512(sessIDsTemp[i] + passwords[i]);
                     if(hash == pckgCont){
-                        var marchatServer = checkForWebSocketServer("ws://jsdhbfuszhbf.de:55");
-                        sendMessage(ws, 'validate:ok ' + marchatServer);
-                        sessIDs[i] = sessIDsTemp[i];
-                        sessIDsTemp[i] = '';
-                        return;
+                        checkForWebSocketServer("ws://jsdhbfuszhbf.de:55").then((a) =>{
+                            sendMessage(ws, 'validate:ok ' + a);
+                            sessIDs[i] = sessIDsTemp[i];
+                            sessIDsTemp[i] = '';
+                            return;
+                        });
                     }
                     //console.log(hash);
                 }else{
