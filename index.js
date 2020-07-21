@@ -51,7 +51,11 @@ wss.on('connection', function connection(ws) {
                 if(pckgCont == await SHA512(randBytesSent + users[i] + passwords[i])){
                     indexOfUser = i;
                     console.log("logged in user " + users[i]);
-                    sessIDsTemp[i] = generateSessionID();
+                    if(sessIDs[indexOfUser] != ''){
+                        
+                    }else{
+                        sessIDsTemp[i] = generateSessionID();
+                    }
                     sendMessage(ws, "loggedIn:" + encryptAes(passwords[indexOfUser],getSessionID(indexOfUser)));
                     //console.log(sessIDsTemp);
                     return;
