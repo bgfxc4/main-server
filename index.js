@@ -64,7 +64,8 @@ wss.on('connection', function connection(ws) {
                 if(sessIDs[i] == ''){
                     var hash = await SHA512(sessIDsTemp[i] + passwords[i]);
                     if(hash == pckgCont){
-                        sendMessage(ws, 'validate:ok');
+                        var marchatServer = checkForWebSocketServer("ws://jsdhbfuszhbf.de:55");
+                        sendMessage(ws, 'validate:ok ' + marchatServer);
                         sessIDs[i] = sessIDsTemp[i];
                         sessIDsTemp[i] = '';
                         return;
@@ -145,4 +146,13 @@ function encryptAes(key, text){
 function decryptAes(key, text){
     var decrypted = CryptoJS.AES.decrypt(text, key);
     return decrypted.toString(CryptoJS.enc.Utf8);
+}
+
+function checkForWebSocketServer(url){
+    try{
+        testWs = new WebSocket(url);
+        return "true";
+    }catch{
+        return "false";
+    }
 }
