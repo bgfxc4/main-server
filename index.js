@@ -75,6 +75,7 @@ wss.on('connection', function connection(ws) {
                     var hash = await SHA512(sessIDs[i] + passwords[i]);
                     if(hash == pckgCont){
                         sendMessage(ws, 'validate:ok');
+                        checkForWebSocketServers(ws);
                         return;
                     }
                     //console.log(hash);
