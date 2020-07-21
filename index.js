@@ -52,7 +52,7 @@ wss.on('connection', function connection(ws) {
                     indexOfUser = i;
                     console.log("logged in user " + users[i]);
                     if(sessIDs[indexOfUser] != ''){
-                        sessIDsTemp[i] = "";
+                        sessIDsTemp[i] = sessIDs[i];
                     }else{
                         sessIDsTemp[i] = generateSessionID();
                     }
