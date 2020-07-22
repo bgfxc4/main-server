@@ -154,7 +154,7 @@ function decryptAes(key, text){
 }
 
 function checkForWebSocketServers(ws){
-    testWsMarchat = new WebSocket("ws://marchat.zapto.org:5555");
+    testWsMarchat = new WebSocket("ws://marchat.zapto.og:5555");
     testWsMarchat.on("open", function(event) {sendMessage(ws, "wsStatus:marchat true")});
     testWsMarchat.on('error', function(event) {sendMessage(ws, "wsStatus:marchat false")});
 }
